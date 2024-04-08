@@ -1,4 +1,4 @@
-module github.com/TutorialEdge/realtime-chat-go-react
+module github.com/charliejlin/gopher-chat/tree/main/backend
 
 go 1.22.2
 
