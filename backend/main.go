@@ -2,29 +2,37 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+	"github.com/charliejlin/gopher-chat/tree/main/backend/pkg/websocket"
 )
 
 
-func serveWs(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Host)
+func serveWs(w http.ResponseWriter, r *http.Request, pool *websocket.Pool) {
+	fmt.Println("Websocket Endpoint Hit")
 
-	ws, err := upgrader.Upgrade(w, r, nil)
+	conn, err := websocket.Upgrade(w,r)
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 	}
 
-	reader(ws)
+	client := &websocket.Client {
+		Conn: conn,
+		Pool: pool,
+	}
+
+	pool.Register <- client
+	client.Read()
+
 }
 
 func setUpRoutes() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Simple Server")
-	})
+	pool := websocket.NewPool()
+	go pool.Start()
 
-	http.HandleFunc("/ws", serveWs)
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(w, r, pool)
+	})
 }
 
 func main() {
