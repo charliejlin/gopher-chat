@@ -3,7 +3,6 @@ package websocket
 import (
 	"log"
 	"net/http"
-
 	"github.com/gorilla/websocket"
 )
 
@@ -14,11 +13,10 @@ var upgrader = websocket.Upgrader{
 }
 
 func Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-
-	if err != nil {
-		log.Println(err)
-	}
-
-	return conn, err
+    conn, err := upgrader.Upgrade(w, r, nil)
+    if err != nil {
+        log.Printf("websocket upgrade error: %v", err)
+        return nil, err
+    }
+    return conn, nil
 }
