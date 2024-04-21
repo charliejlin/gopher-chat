@@ -1,32 +1,27 @@
-"use client"
-import { connect, sendMsg } from "./lib/webSocket/ws";
-import { useState, useEffect, useMemo } from "react"; 
+"use client";
+import { connect, disconnect } from "./lib/webSocket/ws";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import ChatHistory from "./components/Chat/ChatHistory";
 import ChatInput from "./components/Chat/ChatInput";
 
 export default function Home() {
-  const [chatHistory, setChatHistory] = useState<any[]>([]);
+  const [chatHistory, setChatHistory] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    connect((newMessage: any) => {
-      console.log("New Message");
-      setChatHistory(prevChatHistory => [...prevChatHistory, newMessage]);
+    connect((newMessage: string) => {
+      setChatHistory((prevChatHistory) => [...prevChatHistory, newMessage]);
     });
-  }, []); 
-
-  const handleSendMessage = () => {
-    sendMsg(inputValue);
-    setInputValue(""); 
-  };
+  }, []);
 
   return (
-    <main className="">
+    <main className="bg-bg-blue h-screen text-white">
       <Header />
-      <ChatHistory messages={[...chatHistory]} />
-      <ChatInput setInputValue={setInputValue} inputValue={inputValue} />
-      <button onClick={handleSendMessage}>Send</button> 
+      <div>
+        <ChatHistory messages={[...chatHistory]} />
+        <ChatInput setInputValue={setInputValue} inputValue={inputValue} />
+      </div>
     </main>
   );
 }

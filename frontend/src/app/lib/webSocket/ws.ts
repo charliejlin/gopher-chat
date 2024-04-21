@@ -26,5 +26,9 @@ const sendMsg = (msg : (string | ArrayBufferLike | Blob | ArrayBufferView)) => {
     socket.send(msg);
 }
 
+const disconnect = () => {
+    socket.close()
+}
+
 export { connect, sendMsg };
 

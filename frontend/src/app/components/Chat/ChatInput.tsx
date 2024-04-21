@@ -1,17 +1,24 @@
-interface Props {
-    setInputValue: React.Dispatch<React.SetStateAction<string>>;
-    inputValue: string;
-  }
+import { sendMsg } from "@/app/lib/webSocket/ws";
 
-  export default function ChatInput({ setInputValue, inputValue } : Props) {
-    
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(event.target.value);
-    }
+interface InputProps {
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
+  inputValue: string;
+}
 
-    return (
-        <div>
-            <input value={inputValue} onChange={handleChange} />
-        </div>
-    )
+export default function ChatInput({ setInputValue, inputValue } : InputProps) {
+  const handleSendMessage = () => {
+    sendMsg(inputValue);
+    setInputValue("");
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  return (
+    <div className="flex justify-center">
+      <input value={inputValue} onChange={handleChange} />
+      <button onClick={handleSendMessage}>Send</button>
+    </div>
+  );
 }
