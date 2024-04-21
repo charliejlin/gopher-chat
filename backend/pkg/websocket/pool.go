@@ -2,7 +2,6 @@ package websocket
 
 import (
 	"fmt"
-	"log"
 )
 
 type Pool struct {
@@ -33,10 +32,6 @@ func (pool *Pool) Start()  {
 		case client := <-pool.Unregister:
 			delete(pool.Clients, client)
 			fmt.Println("Size of Connection Pool: ", len(pool.Clients))
-			for client := range pool.Clients {
-				log.Println(client)
-                client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
-            }
 		case message := <-pool.Broadcast:
 			fmt.Println("Sending message to all clients in Pool")
 			for client := range pool.Clients {
